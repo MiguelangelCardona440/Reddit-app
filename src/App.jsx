@@ -1,13 +1,14 @@
 import { useSelector, useDispatch } from "react-redux";
 import { addPost, removePost, fetchPosts } from "./features/posts/postsSlice";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import Post from "./features/posts/Post";
 
 function App() {
-  const { state, setState } = useState("");
-
   const posts = useSelector((state) => state.posts.posts);
 
   const loading = useSelector((state) => state.posts.loading);
+
+  const error = useSelector((state) => state.posts.error);
 
   const dispatch = useDispatch();
 
@@ -32,14 +33,20 @@ function App() {
   return (
     <div>
       <h1>Reddit App</h1>
+
       <button onClick={handleAddPost}> Add Test Post </button>
 
-      {posts.map((post) => (
-        <div key={post.id}>
-          <h2>{post.title}</h2>
-          <button onClick={() => handleRemovePost(post.id)}>Delete Post</button>
-        </div>
-      ))}
+      {error && <p>{error}</p>}
+
+      {loading
+        ? "Loading Post"
+        : posts.map((post) => (
+            <Post
+              key={post.id}
+              post={post}
+              handleRemovePost={handleRemovePost}
+            ></Post>
+          ))}
     </div>
   );
 }
