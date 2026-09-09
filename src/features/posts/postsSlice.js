@@ -6,8 +6,11 @@ const initialState = {
   error: null,
 };
 
-export const fetchPost = createAsyncThunk("posts/fetchPost", async () => {
-  const response = await fetch();
+export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
+  const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+  const data = await response.json();
+
+  return data;
 });
 
 const postsSlice = createSlice({
@@ -22,6 +25,23 @@ const postsSlice = createSlice({
     removePost: (state, action) => {
       state.posts = state.posts.filter((post) => post.id !== action.payload);
     },
+  },
+
+  extraReducers: (builder) => {
+    builder.addCase(fetchPosts.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+
+    builder.addCase(fetchPosts.fulfilled, (state, action) => {
+      state.loading = false;
+      state.posts = action.payload;
+    });
+
+    builder.addCase(fetchPosts.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
   },
 });
 
