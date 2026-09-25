@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchPosts } from "./features/posts/postsSlice";
 import { useState, useEffect } from "react";
 import Post from "./features/posts/Post";
+import SearchBar from "./features/posts/SearchBar";
 
 function App() {
   const posts = useSelector((state) => state.posts.posts);
@@ -22,12 +23,13 @@ function App() {
 
   return (
     <div>
-      <input
-        type="text"
-        placeholder="Search Post"
-        value={searchTerm}
-        onChange={(event) => setSearchTerm(event.target.value)}
-      />
+      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+
+      {searchTerm && (
+        <p>
+          Showing {filteredPosts.length} posts for {searchTerm}
+        </p>
+      )}
 
       <h1>Reddit App</h1>
 
@@ -36,7 +38,7 @@ function App() {
       ) : error ? (
         <p>{error}</p>
       ) : filteredPosts.length === 0 ? (
-        <p>No Post Found</p>
+        <p> No posts found for {searchTerm} </p>
       ) : (
         filteredPosts.map((post) => <Post key={post.id} post={post} />)
       )}

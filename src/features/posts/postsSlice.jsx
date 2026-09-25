@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const initialState = {
   posts: [],
+  selectedPost: null,
   loading: false,
   error: null,
 };
@@ -12,6 +13,18 @@ export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
 
   return data;
 });
+
+export const fetchPostById = createAsyncThunk(
+  "posts/fetchPostById",
+  async (id) => {
+    const response = await fetch(
+      `https://jsonplaceholder.typicode.com/posts/${id}`,
+    );
+    const data = await response.json();
+
+    return data;
+  },
+);
 
 const postsSlice = createSlice({
   name: "posts",
@@ -39,6 +52,21 @@ const postsSlice = createSlice({
     });
 
     builder.addCase(fetchPosts.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
+
+    builder.addCase(fetchPostById.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+
+    builder.addCase(fetchPostById.fulfilled, (state, action) => {
+      state.loading = false;
+      state.selectedPost = action.payload;
+    });
+
+    builder.addCase(fetchPostById.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message;
     });
