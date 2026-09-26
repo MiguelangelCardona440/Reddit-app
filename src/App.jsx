@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { fetchPosts } from "./features/posts/postsSlice";
+import { fetchPosts } from "./features/posts/PostsSlice";
 import { useState, useEffect } from "react";
 import Post from "./features/posts/Post";
 import SearchBar from "./features/posts/SearchBar";

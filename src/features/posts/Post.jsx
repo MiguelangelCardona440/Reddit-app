@@ -12,7 +12,7 @@ function Post({ post }) {
 
   return (
     <div>
-      <h2></h2>
+      <h2>{post.title}</h2>
       <p>{post.body}</p>
       <p>User number: {post.userId}</p>
       <button onClick={() => handleRemovePost(post.id)}>Delete Post</button>
