@@ -20,8 +20,11 @@ export const fetchPostById = createAsyncThunk(
     const response = await fetch(
       `https://jsonplaceholder.typicode.com/posts/${id}`,
     );
-    const data = await response.json();
+    if (!response.ok) {
+      throw new Error("Failed to fetch post");
+    }
 
+    const data = await response.json();
     return data;
   },
 );
@@ -59,6 +62,7 @@ const postsSlice = createSlice({
     builder.addCase(fetchPostById.pending, (state) => {
       state.loading = true;
       state.error = null;
+      state.selectedPost = null;
     });
 
     builder.addCase(fetchPostById.fulfilled, (state, action) => {
