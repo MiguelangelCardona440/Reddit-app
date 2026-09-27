@@ -3,6 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 const initialState = {
   posts: [],
   selectedPost: null,
+  comments: [],
   loading: false,
   error: null,
 };
@@ -29,6 +30,18 @@ export const fetchPostById = createAsyncThunk(
   },
 );
 
+export const fetchCommentsById = createAsyncThunk(
+  "posts/fetchCommentsById",
+  async (id) => {
+    const response = await fetch(
+      `https://jsonplaceholder.typicode.com/posts/${id}/comments`,
+    );
+
+    const data = await response.json();
+    return data;
+  },
+);
+
 const postsSlice = createSlice({
   name: "posts",
   initialState,
@@ -44,6 +57,7 @@ const postsSlice = createSlice({
   },
 
   extraReducers: (builder) => {
+    // fetch Posts
     builder.addCase(fetchPosts.pending, (state) => {
       state.loading = true;
       state.error = null;
@@ -59,6 +73,7 @@ const postsSlice = createSlice({
       state.error = action.error.message;
     });
 
+    // Fetch post bu Id
     builder.addCase(fetchPostById.pending, (state) => {
       state.loading = true;
       state.error = null;
@@ -71,6 +86,23 @@ const postsSlice = createSlice({
     });
 
     builder.addCase(fetchPostById.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
+
+    // fetch comments by Id
+    builder.addCase(fetchCommentsById.fulfilled, (state, action) => {
+      state.loading = false;
+      state.comments = action.payload;
+    });
+
+    builder.addCase(fetchCommentsById.pending, (state) => {
+      state.loading = true;
+      state.comments = null;
+      state.error = null;
+    });
+
+    builder.addCase(fetchCommentsById, (state, action) => {
       state.loading = false;
       state.error = action.error.message;
     });

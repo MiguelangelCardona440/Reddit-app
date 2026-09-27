@@ -1,8 +1,7 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { fetchPostById } from "./postsSlice";
-import { Link } from "react-router-dom";
+import { fetchPostById, fetchCommentsById } from "./postsSlice";
 
 ////////////
 
@@ -15,6 +14,7 @@ function PostDetails() {
 
   useEffect(() => {
     dispatch(fetchPostById(params.id));
+    dispatch(fetchCommentsById(params.id));
   }, [dispatch, params.id]);
 
   if (loading) {
