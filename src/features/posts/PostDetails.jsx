@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { fetchPostById, fetchCommentsById } from "./postsSlice";
 
 ////////////
@@ -11,6 +11,24 @@ function PostDetails() {
   const selectedPost = useSelector((state) => state.posts.selectedPost);
   const loading = useSelector((state) => state.posts.loading);
   const error = useSelector((state) => state.posts.error);
+  const comments = useSelector((state) => state.posts.comments);
+
+  const [commentText, setCommentText] = useState("");
+
+  // user comments
+  const userComments = comments.map((comment) => {
+    return (
+      <div key={comment.id}>
+        <h3>{comment.name}</h3>
+        <p>{comment.body}</p>
+      </div>
+    );
+  });
+
+  //
+  const userCommentText = (event) => {
+    setCommentText(event.target.value);
+  };
 
   useEffect(() => {
     dispatch(fetchPostById(params.id));
@@ -18,7 +36,7 @@ function PostDetails() {
   }, [dispatch, params.id]);
 
   if (loading) {
-    return <p>Loadind post...</p>;
+    return <p>Loading post...</p>;
   }
 
   if (error) {
@@ -34,9 +52,16 @@ function PostDetails() {
           <p>{selectedPost.body}</p>
         </>
       )}
-
       <p> post ID: {params.id}</p>
-
+      <br />
+      <h2>Comments</h2>
+      {comments.length === 0 ? <p>No comments yet</p> : userComments}
+      <textarea value={commentText} onChange={userCommentText}></textarea>
+      <br />
+      <button>Summit Comment</button>
+      <br />
+      <br />
+      <br />
       <button>
         <Link to="/">← Back to Posts</Link>
       </button>

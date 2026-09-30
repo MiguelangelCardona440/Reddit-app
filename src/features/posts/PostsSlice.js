@@ -98,11 +98,11 @@ const postsSlice = createSlice({
 
     builder.addCase(fetchCommentsById.pending, (state) => {
       state.loading = true;
-      state.comments = null;
+      state.comments = [];
       state.error = null;
     });
 
-    builder.addCase(fetchCommentsById, (state, action) => {
+    builder.addCase(fetchCommentsById.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message;
     });
