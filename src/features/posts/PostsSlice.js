@@ -54,6 +54,11 @@ const postsSlice = createSlice({
     removePost: (state, action) => {
       state.posts = state.posts.filter((post) => post.id !== action.payload);
     },
+
+    // add user's comments
+    addComment: (state, action) => {
+      state.comments.push(action.payload);
+    },
   },
 
   extraReducers: (builder) => {
@@ -73,7 +78,7 @@ const postsSlice = createSlice({
       state.error = action.error.message;
     });
 
-    // Fetch post bu Id
+    // Fetch post by Id
     builder.addCase(fetchPostById.pending, (state) => {
       state.loading = true;
       state.error = null;
@@ -109,5 +114,5 @@ const postsSlice = createSlice({
   },
 });
 
-export const { addPost, removePost } = postsSlice.actions;
+export const { addPost, removePost, addComment } = postsSlice.actions;
 export default postsSlice.reducer;

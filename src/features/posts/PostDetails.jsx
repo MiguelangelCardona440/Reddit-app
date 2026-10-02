@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { fetchPostById, fetchCommentsById } from "./postsSlice";
+import { fetchPostById, fetchCommentsById, addComment } from "./postsSlice";
 
 ////////////
 
@@ -21,6 +21,9 @@ function PostDetails() {
       <div key={comment.id}>
         <h3>{comment.name}</h3>
         <p>{comment.body}</p>
+        <p>
+          {comment.createdAt ? new Date(comment.createdAt).toISOString() : ""}
+        </p>
       </div>
     );
   });
@@ -28,6 +31,25 @@ function PostDetails() {
   //
   const userCommentText = (event) => {
     setCommentText(event.target.value);
+  };
+
+  const submitComent = () => {
+    if (commentText.trim().length === 0) {
+      alert("We need your opinion");
+      return;
+    }
+
+    const randomId = crypto.randomUUID();
+
+    const newComment = {
+      id: randomId,
+      name: "you",
+      body: commentText,
+      createdAt: new Date().toISOString(),
+    };
+
+    dispatch(addComment(newComment));
+    setCommentText("");
   };
 
   useEffect(() => {
@@ -58,7 +80,7 @@ function PostDetails() {
       {comments.length === 0 ? <p>No comments yet</p> : userComments}
       <textarea value={commentText} onChange={userCommentText}></textarea>
       <br />
-      <button>Summit Comment</button>
+      <button onClick={submitComent}>Submit Comment</button>
       <br />
       <br />
       <br />

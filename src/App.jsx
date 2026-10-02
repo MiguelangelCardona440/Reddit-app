@@ -31,7 +31,7 @@ function App() {
         </p>
       )}
 
-      <h1>Reddit App</h1>
+      <h1>I LOVE YOU JJ</h1>
 
       {loading ? (
         <p>Loading posts...</p>
